@@ -1,0 +1,28 @@
+{
+  "name": "md-slide-studio",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://Zzzz6688.github.io/markdown_to_app",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "dependencies": {
+    "marked": "^5.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/marked": "^5.0.2",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.0.0",
+    "gh-pages": "^6.3.0",
+    "less": "^4.5.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0"
+  }
+}
