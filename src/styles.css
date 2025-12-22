@@ -91,7 +91,8 @@ body {
   box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
   min-height: 540px;
 }
-.slide pre {
+.slide pre,
+.fs-slide pre {
   background: #0f172a;
   color: #e2e8f0;
   padding: 12px 14px;
@@ -105,7 +106,8 @@ body {
   border: 1px solid rgba(148, 163, 184, 0.25);
   position: relative;
 }
-.slide code {
+.slide code,
+.fs-slide code {
   font-family: Menlo, Consolas, "Liberation Mono", monospace;
   font-size: 13px;
 }
@@ -143,15 +145,18 @@ body {
 }
 
 /* 行号样式 */
-.slide pre.code-block {
+.slide pre.code-block,
+.fs-slide pre.code-block {
   counter-reset: line;
   padding-left: 48px;
 }
-.slide pre.code-block .code-line {
+.slide pre.code-block .code-line,
+.fs-slide pre.code-block .code-line {
   display: block;
   counter-increment: line;
 }
-.slide pre.code-block .code-line::before {
+.slide pre.code-block .code-line::before,
+.fs-slide pre.code-block .code-line::before {
   content: counter(line);
   position: absolute;
   left: 12px;
