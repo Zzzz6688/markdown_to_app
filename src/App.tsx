@@ -15,6 +15,7 @@ const DEFAULT_MD = `# MD-Slide Studio
 
 - 支持实时预览
 - 支持同步滚动
+- 支持代码高亮
 
 ---
 
@@ -27,6 +28,7 @@ const DEFAULT_MD = `# MD-Slide Studio
 ## Slide 3
 
 你可以把它当作写面试 PPT 的快速工具。
+
 `;
 
 // markdown utilities live in src/lib/markdown and parsing is handled by the hook

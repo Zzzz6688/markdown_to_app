@@ -235,7 +235,7 @@ ${printHtml}
     if (!ed) return;
 
     function findSlideIndexFromCaret(): number {
-      const pos = ed.selectionStart || 0;
+      const pos = ed?.selectionStart ?? 0;
       const parts = splitSlides(md);
       let cum = 0;
       for (let i = 0; i < parts.length; i++) {

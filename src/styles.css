@@ -151,7 +151,9 @@ body {
   padding-left: 48px;
 }
 .slide pre.code-block .code-line,
-.fs-slide pre.code-block .code-line {
+.fs-slide pre.code-block .code-line,
+.fs-slide .code-line,
+.slide .code-line {
   display: block;
   counter-increment: line;
 }
