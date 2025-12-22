@@ -9,6 +9,7 @@ export default function Header(props: {
   setSelectedTheme: (s: string) => void;
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
+  onExportPdf: () => void;
 }) {
   const {
     themes,
@@ -16,6 +17,7 @@ export default function Header(props: {
     setSelectedTheme,
     isFullscreen,
     onToggleFullscreen,
+    onExportPdf,
   } = props;
   return (
     <header className="app-header">
@@ -34,6 +36,9 @@ export default function Header(props: {
         </select>
         <button style={{ marginLeft: 12 }} onClick={onToggleFullscreen}>
           {isFullscreen ? "退出全屏演示" : "进入全屏演示"}
+        </button>
+        <button style={{ marginLeft: 8 }} onClick={onExportPdf}>
+          导出 PDF
         </button>
       </div>
     </header>

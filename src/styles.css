@@ -1,3 +1,5 @@
+@import "prismjs/themes/prism-tomorrow.css";
+
 :root {
   --bg: #0f1720;
   --pane: #0b1220;
@@ -88,6 +90,75 @@ body {
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
   min-height: 540px;
+}
+.slide pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 12px 14px;
+  border-radius: 6px;
+  overflow: auto;
+  font-family: Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre;
+  word-break: break-word;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  position: relative;
+}
+.slide code {
+  font-family: Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 13px;
+}
+
+.code-wrapper {
+  position: relative;
+}
+
+.code-wrapper pre {
+  padding-top: 38px;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: rgba(15, 23, 42, 0.8);
+  color: #e2e8f0;
+  border: 1px solid rgba(226, 232, 240, 0.2);
+  border-radius: 6px;
+  font-size: 12px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  z-index: 2;
+}
+
+.copy-btn:hover {
+  background: rgba(79, 70, 229, 0.9);
+  border-color: rgba(79, 70, 229, 0.5);
+}
+
+.copy-btn:active {
+  transform: translateY(1px);
+}
+
+/* 行号样式 */
+.slide pre.code-block {
+  counter-reset: line;
+  padding-left: 48px;
+}
+.slide pre.code-block .code-line {
+  display: block;
+  counter-increment: line;
+}
+.slide pre.code-block .code-line::before {
+  content: counter(line);
+  position: absolute;
+  left: 12px;
+  width: 32px;
+  text-align: right;
+  color: rgba(226, 232, 240, 0.45);
+  font-size: 12px;
 }
 .slide h1,
 .slide h2,

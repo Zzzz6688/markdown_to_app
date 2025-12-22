@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { splitSlides } from "../lib/markdown";
 import { useSlides } from "./useSlides";
 
@@ -29,7 +29,44 @@ export function useAppLogic(defaultMd: string) {
   ];
   const [selectedTheme, setSelectedTheme] = useState<string>(themes[0].id);
 
-  // 双向同步滚动（基于比例）
+  function exportPdf() {
+    const printHtml = slides
+      .map(
+        (s) => `<div class="slide ${selectedTheme}">${getSlideHtml(s)}</div>`
+      )
+      .join("\n");
+
+    const styles = Array.from(
+      document.querySelectorAll("style, link[rel='stylesheet']")
+    )
+      .map((node) => (node as HTMLElement).outerHTML)
+      .join("\n");
+
+    const win = window.open("", "_blank", "width=1400,height=900");
+    if (!win) return;
+
+    win.document.write(`<!doctype html>
+<html>
+<head>
+${styles}
+<style>
+@page { size: A4; margin: 12mm; }
+body.print-body { background: #fff; }
+.print-body .slide { box-shadow: none; margin: 0 auto 12mm; }
+</style>
+</head>
+<body class="print-body">
+${printHtml}
+</body>
+</html>`);
+    win.document.close();
+    win.focus();
+    setTimeout(() => {
+      win.print();
+    }, 300);
+  }
+
+  // 双向同步滚动（基于比例，若分隔线在视口内则对齐对应 slide）
   useEffect(() => {
     let rafId: number | null = null;
 
@@ -41,7 +78,6 @@ export function useAppLogic(defaultMd: string) {
       const ys: number[] = [];
       let searchIndex = 0;
       const text = md || "";
-      // get line height from textarea
       const cs = window.getComputedStyle(ed);
       let lineHeight = parseFloat(cs.lineHeight || "");
       if (!lineHeight || isNaN(lineHeight)) lineHeight = 18;
@@ -64,11 +100,9 @@ export function useAppLogic(defaultMd: string) {
 
       // find first separator (slide start except first) visible in editor viewport
       const slideY = computeSlideStartYs();
-      // slideY[0] is top of first slide; separators are slide starts for i>0
       const viewportTop = ed.scrollTop;
       const viewportBottom = ed.scrollTop + ed.clientHeight;
 
-      // find topmost slide start that is within viewport and not the first
       let targetIndex = -1;
       for (let i = 1; i < slideY.length; i++) {
         const y = slideY[i];
@@ -79,7 +113,6 @@ export function useAppLogic(defaultMd: string) {
       }
 
       if (targetIndex === -1) {
-        // if no separator visible, fall back to proportional sync
         syncingPreview.current = true;
         const ratio = ed.scrollTop / (ed.scrollHeight - ed.clientHeight || 1);
         const target = ratio * (pv.scrollHeight - pv.clientHeight);
@@ -99,7 +132,6 @@ export function useAppLogic(defaultMd: string) {
       ) as HTMLElement[];
       const el = slidesEls[targetIndex];
       if (!el) return;
-      // set preview scroll so that el.offsetTop - pv.scrollTop === sepViewportY
       const desiredScrollTop = el.offsetTop - sepViewportY;
       syncingPreview.current = true;
       if (rafId) cancelAnimationFrame(rafId);
@@ -182,7 +214,6 @@ export function useAppLogic(defaultMd: string) {
     ed.selectionEnd = ed.selectionStart;
     const lineHeight = 18;
     ed.scrollTop = Math.max(0, Math.floor(offset / 80) * lineHeight);
-    // 同步把预览中的对应 slide 对齐到顶部（非全屏模式）
     const pv = previewRef.current;
     if (pv) {
       const slidesEls = Array.from(
@@ -190,11 +221,8 @@ export function useAppLogic(defaultMd: string) {
       ) as HTMLElement[];
       const el = slidesEls[i];
       if (el) {
-        // avoid triggering cyclical sync
         syncingPreview.current = true;
-        // scroll so that slide top aligns with preview top
         pv.scrollTop = el.offsetTop;
-        // release sync flag next frame
         requestAnimationFrame(() => {
           syncingPreview.current = false;
         });
@@ -202,7 +230,6 @@ export function useAppLogic(defaultMd: string) {
     }
   }
 
-  // 当编辑器光标位置变化时，自动把当前光标所在的 slide 对齐到预览顶部，方便编辑预览对齐
   useEffect(() => {
     const ed = editorRef.current;
     if (!ed) return;
@@ -237,7 +264,6 @@ export function useAppLogic(defaultMd: string) {
       }
     }
 
-    // respond to clicks and key navigation
     ed.addEventListener("keyup", onCaretMove);
     ed.addEventListener("click", onCaretMove);
 
@@ -263,5 +289,6 @@ export function useAppLogic(defaultMd: string) {
     setSelectedTheme,
     enterFullscreen,
     jumpToSlide,
+    exportPdf,
   } as const;
 }

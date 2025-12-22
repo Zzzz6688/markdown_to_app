@@ -50,6 +50,7 @@ export default function App() {
             api.enterFullscreen();
           }
         }}
+        onExportPdf={() => api.exportPdf()}
       />
 
       <main className="app-main">
