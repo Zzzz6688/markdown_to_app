@@ -6,7 +6,7 @@ export default function PreviewPane(props: {
   getSlideHtml: (s: string) => string;
   selectedTheme: string;
   jumpToSlide: (i: number) => void;
-  previewRef: React.RefObject<HTMLDivElement | null>;
+  previewRef: React.RefObject<HTMLDivElement>;
 }) {
   const { slides, getSlideHtml, selectedTheme, jumpToSlide, previewRef } =
     props;

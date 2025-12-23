@@ -4,7 +4,7 @@ import "./EditorPane.less";
 export default function EditorPane(props: {
   md: string;
   setMd: (v: string) => void;
-  editorRef: React.RefObject<HTMLTextAreaElement | null>;
+  editorRef: React.RefObject<HTMLTextAreaElement>;
 }) {
   return (
     <section className="editor-pane">

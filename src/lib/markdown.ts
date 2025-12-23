@@ -1,5 +1,5 @@
 import { marked } from "marked";
-// @ts-ignore 类型声明由自定义 d.ts 提供
+import { markedHighlight } from "marked-highlight";
 import Prism from "prismjs";
 import "prismjs/components/prism-typescript";
 import "prismjs/components/prism-javascript";
@@ -8,13 +8,22 @@ import "prismjs/components/prism-markup";
 import "prismjs/components/prism-css";
 
 // Preserve single newlines as <br>
-marked.setOptions({ breaks: true });
 marked.setOptions({
-  highlight(code, lang) {
-    const language = lang && Prism.languages[lang] ? lang : "javascript";
-    return Prism.highlight(code, Prism.languages[language], language);
-  },
+  breaks: true,
+  // Avoid deprecated defaults (and keeps output deterministic)
+  mangle: false,
+  headerIds: false,
 });
+
+marked.use(
+  markedHighlight({
+    langPrefix: "language-",
+    highlight(code, lang) {
+      const language = lang && Prism.languages[lang] ? lang : "javascript";
+      return Prism.highlight(code, Prism.languages[language], language);
+    },
+  })
+);
 
 export function splitSlides(md: string) {
   const lines = md.split(/\r?\n/);

@@ -32,7 +32,10 @@ export function useAppLogic(defaultMd: string) {
   function exportPdf() {
     const printHtml = slides
       .map(
-        (s) => `<div class="slide ${selectedTheme}">${getSlideHtml(s)}</div>`
+        (s) =>
+          `<section class="slide ${selectedTheme}"><div class="slide-inner">${getSlideHtml(
+            s
+          )}</div></section>`
       )
       .join("\n");
 
@@ -51,8 +54,77 @@ export function useAppLogic(defaultMd: string) {
 ${styles}
 <style>
 @page { size: A4; margin: 12mm; }
-body.print-body { background: #fff; }
-.print-body .slide { box-shadow: none; margin: 0 auto 12mm; }
+
+/* Print-friendly defaults */
+html, body { background: #fff; }
+body.print-body {
+  margin: 0;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* One slide per page, stable pagination */
+@media print {
+  body.print-body { counter-reset: slide; }
+  .slide {
+    counter-increment: slide;
+    break-after: page;
+    page-break-after: always;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .slide:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  /* Page number (bottom-right) */
+  .slide::after {
+    content: counter(slide);
+    position: absolute;
+    right: 10mm;
+    bottom: 8mm;
+    font-size: 10pt;
+    color: rgba(15, 23, 42, 0.55);
+  }
+}
+
+/* A4 document-like layout */
+.print-body .slide {
+  box-shadow: none;
+  border-radius: 0;
+  margin: 0 auto 12mm;
+  width: 190mm;
+  max-width: 190mm;
+  min-height: 267mm;
+  padding: 0;
+  position: relative;
+}
+
+.print-body .slide-inner {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 267mm;
+  padding: 12mm;
+}
+
+/* Remove UI-only controls in print */
+@media print {
+  .copy-btn { display: none !important; }
+}
+
+/* Code blocks: wrap & avoid clipping in print */
+@media print {
+  pre {
+    overflow: visible !important;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  pre, code {
+    font-size: 10pt;
+    line-height: 1.4;
+  }
+}
 </style>
 </head>
 <body class="print-body">
@@ -168,7 +240,7 @@ ${printHtml}
       if (pv) pv.removeEventListener("scroll", onPreviewScroll);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [slides]);
+  }, [slides, md]);
 
   // Fullscreen handlers and keyboard
   useEffect(() => {
